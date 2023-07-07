@@ -31,8 +31,8 @@ public class RobotContainer {
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem(
     new WPI_VictorSPX(Constants.frontLeft), 
     new WPI_TalonSRX(Constants.backLeft), 
-    new WPI_TalonSRX(Constants.frontRight),
-    new WPI_VictorSPX(Constants.backRight)
+    new WPI_VictorSPX(Constants.frontRight),
+    new WPI_TalonSRX(Constants.backRight)
   );
 
   // Replace with CommandPS4Controller or CommandJoystick if needed

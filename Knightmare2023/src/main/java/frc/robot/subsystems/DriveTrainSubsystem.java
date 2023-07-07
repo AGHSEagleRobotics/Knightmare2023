@@ -10,25 +10,19 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(Constants.frontLeft);
-  private final WPI_TalonSRX backLeft = new WPI_TalonSRX(Constants.backLeft);
-  private final WPI_TalonSRX frontRight = new WPI_TalonSRX(Constants.frontRight);
-  private final WPI_VictorSPX backRight = new WPI_VictorSPX(Constants.backRight);
  
   private final WPI_VictorSPX m_frontLeft;
   private final WPI_TalonSRX m_backLeft;
-  private final WPI_TalonSRX m_frontRight;
-  private final WPI_VictorSPX m_backRight;
+  private final WPI_VictorSPX m_frontRight;
+  private final WPI_TalonSRX m_backRight;
 
-  
   
   private final DifferentialDrive m_differentialDrive;
 
   /** Creates a new DriveTrainSubsystem. */
-  public DriveTrainSubsystem(WPI_VictorSPX frontLeft, WPI_TalonSRX backLeft, WPI_TalonSRX frontRight,   WPI_VictorSPX backRight) {
+  public DriveTrainSubsystem(WPI_VictorSPX frontLeft, WPI_TalonSRX backLeft, WPI_VictorSPX frontRight, WPI_TalonSRX backRight) {
    
     m_frontLeft = frontLeft;
     m_backLeft = backLeft;
