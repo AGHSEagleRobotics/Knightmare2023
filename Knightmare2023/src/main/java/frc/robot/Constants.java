@@ -39,5 +39,20 @@ public final class Constants {
 
   public static class DashboardConstants {
     public static final int USBID_Camera = 0;
+
+    public static final int targetRpmWidth = 3;
+    public static final int targetRpmHeight = 3;
+    public static final int rpmWidth = 6;
+    public static final int rpmHeight = targetRpmHeight;
+
+    public static final int upperTargetX = 12;
+    public static final int upperTargetY = 0;
+    public static final int lowerTargetX = upperTargetX;
+    public static final int lowerTargetY = upperTargetY + targetRpmHeight;
+
+    public static final int upperRpmX = upperTargetX + targetRpmWidth;
+    public static final int upperRpmY = upperTargetY;
+    public static final int lowerRpmX = lowerTargetX + targetRpmWidth;
+    public static final int lowerRpmY = lowerTargetY;
   }
 }

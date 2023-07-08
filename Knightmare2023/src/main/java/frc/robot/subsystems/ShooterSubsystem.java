@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -22,8 +23,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private Timer m_shooterCooldownTimer;   //< Allow the shooter to run for a bit after disabling
 
   private boolean m_shooterEnabled = false;
-  private double m_upperTargetRPM = 0;
-  private double m_lowerTargetRPM = 0;
+  private double m_upperTargetRPM = 1000;   // TEMPORARY
+  private double m_lowerTargetRPM = 1200;   // TEMPORARY
 
   // Math variables needed to convert RPM to ticks per second/ticks per
   private final int SENSOR_CYCLES_PER_SECOND = 10;   // sensor velocity period is 100 ms
@@ -88,11 +89,15 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getUpperRPM () {
     double rawSensorData = m_upperMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
+// if (m_shooterEnabled) return 2500.0;  // DEBUG
+// else return 0;  // DEBUG
     return motorRPM;
   }
   public double getLowerRPM () {
     double rawSensorData = m_lowerMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
+// if (m_shooterEnabled) return 3000.0;  // DEBUG
+// else return 0;  // DEBUG
     return motorRPM;
   }
 
@@ -100,10 +105,16 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     
-    if (m_shooterCooldownTimer.hasElapsed(ShooterConstants.SHOOTER_COOLDOWN_TIME))  { // don't turn off shooter until some time has elapsed
+    if (m_shooterCooldownTimer.hasElapsed(ShooterConstants.SHOOTER_COOLDOWN_TIME))  {
+      // don't turn off shooter until some time has elapsed
       m_shooterEnabled = false;
       m_shooterCooldownTimer.stop();
       m_shooterCooldownTimer.reset();
+    }
+
+    if (DriverStation.isDisabled()) {
+      // This prevents the shooter from starting when the robot is enabled.
+      m_shooterEnabled = false;
     }
 
     if (m_shooterEnabled) {
