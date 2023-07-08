@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -22,12 +23,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final Dashboard m_dashboard = new Dashboard();
 
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem(
-    new WPI_VictorSPX(Constants.frontLeft), 
-    new WPI_TalonSRX(Constants.backLeft), 
-    new WPI_VictorSPX(Constants.frontRight),
-    new WPI_TalonSRX(Constants.backRight)
+    new WPI_VictorSPX(DriveTrainConstants.frontLeft), 
+    new WPI_TalonSRX(DriveTrainConstants.backLeft), 
+    new WPI_VictorSPX(DriveTrainConstants.frontRight),
+    new WPI_TalonSRX(DriveTrainConstants.backRight)
   );
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
