@@ -23,7 +23,7 @@ public class Dashboard {
         m_shuffleboardTab =  Shuffleboard.getTab(SHUFFLEBOARD_TAB_NAME);
         Shuffleboard.selectTab(SHUFFLEBOARD_TAB_NAME);
 
-        m_cameraView = CameraServer.startAutomaticCapture(DashboardConstants.CameraUSBDevice);
+        m_cameraView = CameraServer.startAutomaticCapture(DashboardConstants.USBID_Camera);
         m_cameraView.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
         m_cameraView.setFPS(CAMERA_FPS);
         m_cameraView.setResolution(CAMERA_RES_WIDTH, CAMERA_RES_HEIGHT);

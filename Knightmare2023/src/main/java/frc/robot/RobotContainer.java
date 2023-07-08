@@ -6,8 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -26,11 +30,15 @@ public class RobotContainer {
   private final Dashboard m_dashboard = new Dashboard();
 
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem(
-    new WPI_VictorSPX(DriveTrainConstants.frontLeft), 
-    new WPI_TalonSRX(DriveTrainConstants.backLeft), 
-    new WPI_VictorSPX(DriveTrainConstants.frontRight),
-    new WPI_TalonSRX(DriveTrainConstants.backRight)
+    new WPI_VictorSPX(DriveTrainConstants.CANID_frontLeft),
+    new WPI_TalonSRX(DriveTrainConstants.CANID_backLeft),
+    new WPI_VictorSPX(DriveTrainConstants.CANID_frontRight),
+    new WPI_TalonSRX(DriveTrainConstants.CANID_backRight)
   );
+
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(
+    new WPI_TalonFX(ShooterConstants.CANID_upperMotor),
+    new WPI_TalonFX(ShooterConstants.CANID_lowerMotor));
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =

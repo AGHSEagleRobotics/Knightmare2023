@@ -18,13 +18,26 @@ public final class Constants {
   }
 
   public static class DriveTrainConstants {
-    public static final int frontRight = 1;
-    public static final int backRight = 2;
-    public static final int backLeft = 3;
-    public static final int frontLeft = 4;
+    public static final int CANID_frontRight = 1;
+    public static final int CANID_backRight = 2;
+    public static final int CANID_backLeft = 3;
+    public static final int CANID_frontLeft = 4;
   }
 
+  public static class ShooterConstants {
+    public static final int CANID_upperMotor = 5;
+    public static final int CANID_lowerMotor = 6;
+
+    public static final int PID_IDX = 0;
+    public static final double GAINS_VELOCITY_F = 0.047;
+    public static final double GAINS_VELOCITY_P = 0.25;
+    public static final double GAINS_VELOCITY_I = 0;
+    public static final double GAINS_VELOCITY_D = 0;
+
+    public static final double SHOOTER_COOLDOWN_TIME = 2.0;   // time in seconds to wait before shooter is turned off
+}
+
   public static class DashboardConstants {
-    public static final int CameraUSBDevice = 0;
+    public static final int USBID_Camera = 0;
   }
 }
