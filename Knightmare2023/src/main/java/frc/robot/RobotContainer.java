@@ -8,6 +8,7 @@ import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.Position;
@@ -80,10 +81,4 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return null;
   }
-
-  /** This function is called periodically by Robot.robotPeriodic. */
-  public void periodic() {
-    m_dashboard.periodic();
-  }
-  
 }

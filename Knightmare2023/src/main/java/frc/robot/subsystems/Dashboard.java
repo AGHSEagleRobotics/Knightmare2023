@@ -1,4 +1,9 @@
-package frc.robot;
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
 import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -9,10 +14,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DashboardConstants;
-import frc.robot.subsystems.ShooterSubsystem;
 
-public class Dashboard {
+public class Dashboard extends SubsystemBase {
   private final ShooterSubsystem m_ShooterSubsystem;
 
   private final ShuffleboardTab m_shuffleboardTab;
@@ -29,7 +34,10 @@ public class Dashboard {
   private final GenericEntry m_lowerTargetRPM;
   private final GenericEntry m_upperRPM;
   private final GenericEntry m_lowerRPM;
+  private final GenericEntry m_upperRpmOk;
+  private final GenericEntry m_lowerRpmOk;
 
+  /** Creates a new Dashboard. */
   public Dashboard(ShooterSubsystem shooterSubsystem) {
     m_ShooterSubsystem = shooterSubsystem;
 
@@ -57,6 +65,11 @@ public class Dashboard {
       .withSize(DashboardConstants.rpmWidth, DashboardConstants.rpmHeight)
       .withPosition(DashboardConstants.upperRpmX, DashboardConstants.upperRpmY)
       .getEntry();
+    m_upperRpmOk = m_shuffleboardTab.add("UpperOk", false)
+      .withWidget(BuiltInWidgets.kBooleanBox)
+      .withSize(DashboardConstants.rpmOkWidth, DashboardConstants.rpmOkHeight)
+      .withPosition(DashboardConstants.upperRpmOkX, DashboardConstants.upperRpmOkY)
+      .getEntry();
       
     m_lowerTargetRPM = m_shuffleboardTab.add("LowerTarget", 0)
       .withSize(DashboardConstants.targetRpmWidth, DashboardConstants.targetRpmHeight)
@@ -69,7 +82,12 @@ public class Dashboard {
       .withSize(DashboardConstants.rpmWidth, DashboardConstants.rpmHeight)
       .withPosition(DashboardConstants.lowerRpmX, DashboardConstants.lowerRpmY)
       .getEntry();
-      
+    m_lowerRpmOk = m_shuffleboardTab.add("LowerOk", false)
+      .withWidget(BuiltInWidgets.kBooleanBox)
+      .withSize(DashboardConstants.rpmOkWidth, DashboardConstants.rpmOkHeight)
+      .withPosition(DashboardConstants.lowerRpmOkX, DashboardConstants.lowerRpmOkY)
+      .getEntry();
+
     // m_pitch = m_shuffleboardTab.add("Pitch", 0 )
     // .withWidget(BuiltInWidgets.kTextView)
     // .withSize(2, 2)
@@ -77,13 +95,15 @@ public class Dashboard {
     // .getEntry();
   } // end constructor
 
-  /// Update the dashboard
+
+  @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     m_upperTargetRPM.setInteger((int)m_ShooterSubsystem.getUpperTargetRPM());
     m_lowerTargetRPM.setInteger((int)m_ShooterSubsystem.getLowerTargetRPM());
     m_upperRPM.setInteger((int)m_ShooterSubsystem.getUpperRPM());
     m_lowerRPM.setInteger((int)m_ShooterSubsystem.getLowerRPM());
+    m_upperRpmOk.setBoolean(m_ShooterSubsystem.isUpperRpmOk());
+    m_lowerRpmOk.setBoolean(m_ShooterSubsystem.isLowerRpmOk());
   }
-
 }
- 

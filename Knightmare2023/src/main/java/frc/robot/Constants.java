@@ -42,6 +42,8 @@ public final class Constants {
     public static final double SHOOTER_RPM_STEP_CHANGE = 100;
     public static final double MAX_SHOOTER_RPM = 6000;
     public static final double MIN_SHOOTER_RPM = 0;
+
+    public static final double SHOOTER_RPM_TOLERANCE = 100;
 }
 
   public static class DashboardConstants {
@@ -51,6 +53,8 @@ public final class Constants {
     public static final int targetRpmHeight = 3;
     public static final int rpmWidth = 6;
     public static final int rpmHeight = targetRpmHeight;
+    public static final int rpmOkWidth = 1;
+    public static final int rpmOkHeight = targetRpmHeight;
 
     public static final int upperTargetX = 12;
     public static final int upperTargetY = 0;
@@ -61,5 +65,10 @@ public final class Constants {
     public static final int upperRpmY = upperTargetY;
     public static final int lowerRpmX = lowerTargetX + targetRpmWidth;
     public static final int lowerRpmY = lowerTargetY;
+
+    public static final int upperRpmOkX = upperTargetX + targetRpmWidth + rpmWidth;
+    public static final int upperRpmOkY = upperTargetY;
+    public static final int lowerRpmOkX = lowerTargetX + targetRpmWidth + rpmWidth;
+    public static final int lowerRpmOkY = lowerTargetY;
   }
 }

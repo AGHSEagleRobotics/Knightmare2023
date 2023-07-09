@@ -104,6 +104,15 @@ public class ShooterSubsystem extends SubsystemBase {
     return motorRPM;
   }
 
+  public boolean isUpperRpmOk() {
+    double error = getUpperRPM() - m_upperTargetRPM;
+    return (Math.abs(error) <= ShooterConstants.SHOOTER_RPM_TOLERANCE);
+  }
+  public boolean isLowerRpmOk() {
+    double error = getLowerRPM() - m_lowerTargetRPM;
+    return (Math.abs(error) <= ShooterConstants.SHOOTER_RPM_TOLERANCE);
+  }
+
   /** Increase shooter speed(s) by one step
    *  @param  position  Increase speed of upper, lower or both wheels
    */
