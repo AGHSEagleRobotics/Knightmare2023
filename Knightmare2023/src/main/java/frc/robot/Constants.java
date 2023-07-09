@@ -70,5 +70,10 @@ public final class Constants {
     public static final int upperRpmOkY = upperTargetY;
     public static final int lowerRpmOkX = lowerTargetX + targetRpmWidth + rpmWidth;
     public static final int lowerRpmOkY = lowerTargetY;
+
+    public static final int pitchAngleX = upperTargetX;
+    public static final int pitchAngleY = 8;
+    public static final int pitchAngleWidth = 3;
+    public static final int pitchAngleHeight = 2;
   }
 }
