@@ -35,6 +35,13 @@ public final class Constants {
     public static final double GAINS_VELOCITY_D = 0;
 
     public static final double SHOOTER_COOLDOWN_TIME = 2.0;   // time in seconds to wait before shooter is turned off
+
+    public static final double UPPER_RPM_DEFAULT = 1000;
+    public static final double LOWER_RPM_DEFAULT = 1000;
+
+    public static final double SHOOTER_RPM_STEP_CHANGE = 100;
+    public static final double MAX_SHOOTER_RPM = 6000;
+    public static final double MIN_SHOOTER_RPM = 0;
 }
 
   public static class DashboardConstants {

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,13 +24,15 @@ public class ShooterSubsystem extends SubsystemBase {
   private Timer m_shooterCooldownTimer;   //< Allow the shooter to run for a bit after disabling
 
   private boolean m_shooterEnabled = false;
-  private double m_upperTargetRPM = 1000;   // TEMPORARY
-  private double m_lowerTargetRPM = 1200;   // TEMPORARY
+  private double m_upperTargetRPM = ShooterConstants.UPPER_RPM_DEFAULT;
+  private double m_lowerTargetRPM = ShooterConstants.LOWER_RPM_DEFAULT;
 
   // Math variables needed to convert RPM to ticks per second/ticks per
   private final int SENSOR_CYCLES_PER_SECOND = 10;   // sensor velocity period is 100 ms
   private final int SEC_PER_MIN = 60;
   private final int COUNTS_PER_REV = 2048;
+
+  public enum Position { upper, lower, both }
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem(WPI_TalonFX upperMotor, WPI_TalonFX lowerMotor)  {
@@ -89,17 +92,46 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getUpperRPM () {
     double rawSensorData = m_upperMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
-// if (m_shooterEnabled) return 2500.0;  // DEBUG
+// if (m_shooterEnabled) return m_upperTargetRPM;  // DEBUG
 // else return 0;  // DEBUG
     return motorRPM;
   }
   public double getLowerRPM () {
     double rawSensorData = m_lowerMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
-// if (m_shooterEnabled) return 3000.0;  // DEBUG
+// if (m_shooterEnabled) return m_lowerTargetRPM;  // DEBUG
 // else return 0;  // DEBUG
     return motorRPM;
   }
+
+  /** Increase shooter speed(s) by one step
+   *  @param  position  Increase speed of upper, lower or both wheels
+   */
+  public void shooterRpmStepIncrease(Position position) {
+    if ((position == Position.upper) || (position == Position.both)) {
+      m_upperTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_upperTargetRPM = MathUtil.clamp(m_upperTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    }
+    if ((position == Position.lower) || (position == Position.both)) {
+      m_lowerTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_lowerTargetRPM = MathUtil.clamp(m_lowerTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    }
+  }
+
+  /** Decrease shooter speed(s) by one step
+   *  @param  position  Decrease speed of upper, lower or both wheels
+   */
+  public void shooterRpmStepDecrease(Position position) {
+    if ((position == Position.upper) || (position == Position.both)) {
+      m_upperTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_upperTargetRPM = MathUtil.clamp(m_upperTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    }
+    if ((position == Position.lower) || (position == Position.both)) {
+      m_lowerTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_lowerTargetRPM = MathUtil.clamp(m_lowerTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    }
+  }
+
 
   @Override
   public void periodic() {

@@ -10,6 +10,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.Position;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -18,7 +19,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,24 +48,27 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSubsystem, () -> m_driverController.getLeftY(), () -> m_driverController.getRightX());
-    m_driveTrainSubsystem.setDefaultCommand(m_driveCommand);
+    // Default commands
+    m_driveTrainSubsystem.setDefaultCommand(
+      new DriveCommand(m_driveTrainSubsystem, () -> m_driverController.getLeftY(), () -> m_driverController.getRightX()));
+
     // Configure the trigger bindings
     configureBindings();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
+   * Use this method to define your trigger->command mappings.
    */
   private void configureBindings() {
+    /** Enable/disable shooter */
     m_driverController.a().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(true)));
     m_driverController.b().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(false)));
+
+    /** Set shooter speed */
+    m_driverController.povUp().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.both)));
+    m_driverController.povDown().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepDecrease(Position.both)));
+    m_driverController.povRight().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.upper)));
+    m_driverController.povLeft().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepDecrease(Position.upper)));
   }
 
   /**
