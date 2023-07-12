@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -20,6 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX m_upperMotor;
   private final WPI_TalonFX m_lowerMotor;
+  private final CANSparkMax m_feederMotor;
 
   private Timer m_shooterCooldownTimer;   //< Allow the shooter to run for a bit after disabling
 
@@ -33,11 +36,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private final int COUNTS_PER_REV = 2048;
 
   public enum Position { upper, lower, both }
+  public enum FeederDirection { forward, reverse, stop }
 
   /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem(WPI_TalonFX upperMotor, WPI_TalonFX lowerMotor)  {
+  public ShooterSubsystem(WPI_TalonFX upperMotor, WPI_TalonFX lowerMotor, CANSparkMax feederMotor)  {
     m_upperMotor = upperMotor;
     m_lowerMotor = lowerMotor;
+    m_feederMotor = feederMotor;
 
     // Configure upper motor
     m_upperMotor.configFactoryDefault();
@@ -63,6 +68,10 @@ public class ShooterSubsystem extends SubsystemBase {
     m_lowerMotor.config_kI(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_I);
     m_lowerMotor.config_kD(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_D);
 
+    // Configure feeder motor
+    m_feederMotor.setIdleMode(IdleMode.kBrake);
+    m_feederMotor.setInverted(false);
+
     m_shooterCooldownTimer = new Timer();
   }
 
@@ -73,6 +82,10 @@ public class ShooterSubsystem extends SubsystemBase {
     } else { // if false
       m_shooterCooldownTimer.start(); // start cooldown timer
     }
+  }
+  
+  public boolean isShooterEnabled () { 
+    return m_shooterEnabled;
   }
   
   public void setUpperTargetRPM (double rpm) {
@@ -141,6 +154,23 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
+  public void setFeederMotor(FeederDirection direction) {
+    switch (direction) {
+      case forward:
+        m_feederMotor.set(ShooterConstants.FEEDER_FWD_SPEED);
+        break;
+        
+      case reverse:
+        m_feederMotor.set(ShooterConstants.FEEDER_REV_SPEED);
+        break;
+
+      case stop:
+      default:
+        m_feederMotor.set(0.0);
+        break;
+    }
+  }
+
 
   @Override
   public void periodic() {
@@ -149,6 +179,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (m_shooterCooldownTimer.hasElapsed(ShooterConstants.SHOOTER_COOLDOWN_TIME))  {
       // don't turn off shooter until some time has elapsed
       m_shooterEnabled = false;
+      DataLogManager.log("disabling shooter");
       m_shooterCooldownTimer.stop();
       m_shooterCooldownTimer.reset();
     }

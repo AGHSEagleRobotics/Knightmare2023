@@ -27,6 +27,7 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int CANID_upperMotor = 5;
     public static final int CANID_lowerMotor = 6;
+    public static final int CANID_feederMotor = 7;
 
     public static final int PID_IDX = 0;
     public static final double GAINS_VELOCITY_F = 0.047;
@@ -44,6 +45,13 @@ public final class Constants {
     public static final double MIN_SHOOTER_RPM = 0;
 
     public static final double SHOOTER_RPM_TOLERANCE = 100;
+
+    public static final double FEEDER_FWD_SPEED = 0.5;
+    public static final double FEEDER_REV_SPEED = -0.5;
+
+    // Shoot command
+    public static final double SHOOT_FWD_TIME = 0.25;
+    public static final double SHOOT_REV_TIME = 0.25;
 }
 
   public static class DashboardConstants {
