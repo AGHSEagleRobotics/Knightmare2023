@@ -25,6 +25,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SerialPort;
 
 /**
@@ -34,10 +35,14 @@ import edu.wpi.first.wpilibj.SerialPort;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // The robot's actuators and sensors are defined here...
+  // Actuators
+  Relay m_aimActuator = new Relay(ShooterConstants.RELAY_aimActuator);
 
   // Sensors
   private final AHRS m_ahrs = new AHRS(SerialPort.Port.kUSB);
+
+  // The robot's subsystems and commands are defined here...
 
   // Subsystems
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem(
@@ -52,7 +57,7 @@ public class RobotContainer {
     new WPI_TalonFX(ShooterConstants.CANID_lowerMotor),
     new CANSparkMax(ShooterConstants.CANID_feederMotor, MotorType.kBrushless));
 
-  private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_ahrs);
+  private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_aimActuator, m_ahrs);
 
   public final Dashboard m_dashboard = new Dashboard(m_shooterSubsystem, m_ahrs);
 
@@ -77,9 +82,17 @@ public class RobotContainer {
     /** Enable/disable shooter */
     m_driverController.a().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(true)));
     m_driverController.b().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(false)));
+    
+    /** Enable/disable Auto Aim */
+    m_driverController.x().onTrue(new InstantCommand(() -> m_aimSubsystem.setAutoEnabled(true)));
+    m_driverController.y().onTrue(new InstantCommand(() -> m_aimSubsystem.setAutoEnabled(false)));
 
     /** Shoot */
-    m_driverController.rightBumper().onTrue(new ShootCommand(m_shooterSubsystem));
+    m_driverController.rightTrigger(ShooterConstants.SHOOTER_TRIGGER_THRESHOLD).onTrue(new ShootCommand(m_shooterSubsystem));
+
+    /** Aim */
+    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_aimSubsystem.increaseAngle()));
+    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_aimSubsystem.decreaseAngle()));
 
     /** Set shooter speed */
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.both)));

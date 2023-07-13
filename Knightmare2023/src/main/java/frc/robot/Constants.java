@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Relay;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -40,6 +42,8 @@ public final class Constants {
     public static final double UPPER_RPM_DEFAULT = 1000;
     public static final double LOWER_RPM_DEFAULT = 1000;
 
+    public static final double SHOOTER_TRIGGER_THRESHOLD = 0.5;
+
     public static final double SHOOTER_RPM_STEP_CHANGE = 100;
     public static final double MAX_SHOOTER_RPM = 6000;
     public static final double MIN_SHOOTER_RPM = 0;
@@ -52,7 +56,19 @@ public final class Constants {
     // Shoot command
     public static final double SHOOT_FWD_TIME = 0.25;
     public static final double SHOOT_REV_TIME = 0.25;
-}
+    
+    // Aim Subsystem
+    public static final int RELAY_aimActuator = 0;
+
+    public static final double DEFAULT_ANGLE = 10.0;
+    public static final double AIM_ANGLE_TOLERANCE = 0.5;   // degrees; the shooter is considered on-target within this tolerance
+
+    public static final double SETPOINT_INCREMENT = 0.5;    // degrees - amount to change the setpoint for manual adjustment
+
+    public static final Relay.Value AIM_UP = Relay.Value.kReverse;
+    public static final Relay.Value AIM_DOWN = Relay.Value.kForward;
+    public static final Relay.Value AIM_STOP = Relay.Value.kOff;
+  }
 
   public static class DashboardConstants {
     public static final int USBID_Camera = 0;
