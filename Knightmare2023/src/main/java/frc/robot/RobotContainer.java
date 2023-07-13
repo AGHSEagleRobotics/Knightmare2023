@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.subsystems.AimSubsystem;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -17,12 +18,14 @@ import frc.robot.subsystems.ShooterSubsystem.Position;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj.SerialPort;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,6 +36,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  // Sensors
+  private final AHRS m_ahrs = new AHRS(SerialPort.Port.kUSB);
+
+  // Subsystems
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem(
     new WPI_VictorSPX(DriveTrainConstants.CANID_frontLeft),
     new WPI_TalonSRX(DriveTrainConstants.CANID_backLeft),
@@ -45,7 +52,9 @@ public class RobotContainer {
     new WPI_TalonFX(ShooterConstants.CANID_lowerMotor),
     new CANSparkMax(ShooterConstants.CANID_feederMotor, MotorType.kBrushless));
 
-  public final Dashboard m_dashboard = new Dashboard(m_shooterSubsystem);
+  private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_ahrs);
+
+  public final Dashboard m_dashboard = new Dashboard(m_shooterSubsystem, m_ahrs);
 
   // Driver controllers
   private final CommandXboxController m_driverController =
