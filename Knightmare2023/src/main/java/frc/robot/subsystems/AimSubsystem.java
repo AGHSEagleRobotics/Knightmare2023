@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -31,6 +32,11 @@ public class AimSubsystem extends SubsystemBase {
    */
   public void setAutoEnabled (boolean enable) {
     m_autoEnabled = enable;
+
+    if (enable == false) {
+      // also disable manual aim, if it's active
+      m_manualActive = false;
+    }
   }
 
   /** Increase the shooter setpoint */
@@ -71,6 +77,15 @@ public class AimSubsystem extends SubsystemBase {
         // we're at the setpoint - disable manual mode
         m_manualActive = false;
       }
+    } else {
+      // hold position
+      m_actuator.set(ShooterConstants.AIM_STOP);
+    }
+
+    if (DriverStation.isDisabled()) {
+      // disable aim
+      m_autoEnabled = false;
+      m_manualActive = false;
     }
   }
 }
