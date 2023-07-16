@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.UpdateAngleCommand;
 import frc.robot.subsystems.AimSubsystem;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -24,7 +25,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -92,8 +92,8 @@ public class RobotContainer {
     m_driverController.rightTrigger(ShooterConstants.SHOOTER_TRIGGER_THRESHOLD).onTrue(new ShootCommand(m_shooterSubsystem));
 
     /** Aim */
-    m_driverController.rightBumper().onTrue(new RepeatCommand(new InstantCommand(() -> m_aimSubsystem.increaseAngle())));
-    m_driverController.leftBumper().onTrue(new RepeatCommand(new InstantCommand(() -> m_aimSubsystem.decreaseAngle())));
+    m_driverController.rightBumper().whileTrue(new UpdateAngleCommand(UpdateAngleCommand.Direction.increase, m_aimSubsystem));
+    m_driverController.leftBumper().whileTrue(new UpdateAngleCommand(UpdateAngleCommand.Direction.decrease, m_aimSubsystem));
 
     /** Set shooter speed */
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.both)));

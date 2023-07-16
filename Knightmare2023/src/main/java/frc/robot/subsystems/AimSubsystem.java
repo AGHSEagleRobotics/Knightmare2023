@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.databind.deser.ValueInstantiator.Gettable;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -46,24 +45,28 @@ public class AimSubsystem extends SubsystemBase {
   /** Set the target Aim Angle */
   private void setTargetAngle(double target) {
     m_angleSetpoint = target;
-    Preferences.setDouble(ShooterConstants.PREF_KEY_ANGLE, target);
-    DataLogManager.log(String.format("Target angle set to %.2f", target));
   }
-
+  
   /** Get the target Aim Angle */
   public double getTargetAngle() {
     return m_angleSetpoint;
   }
-
+  
+  /** Save the target Aim Angle */
+  public void saveTargetAngle() {
+    Preferences.setDouble(ShooterConstants.PREF_KEY_ANGLE, m_angleSetpoint);
+    DataLogManager.log(String.format("Target angle saved: %.2f", m_angleSetpoint));
+  }
+  
   /** Increase the shooter setpoint */
-  public void increaseAngle() {
+  public void increaseTargetAngle() {
     setTargetAngle(getTargetAngle() + ShooterConstants.SETPOINT_INCREMENT);
     m_manualActive = true;
     m_autoEnabled = false;
   }
   
   /** Decrease the shooter setpoint */
-  public void decreaseAngle() {
+  public void decreaseTargetAngle() {
     setTargetAngle(getTargetAngle() - ShooterConstants.SETPOINT_INCREMENT);
     m_manualActive = true;
     m_autoEnabled = false;
