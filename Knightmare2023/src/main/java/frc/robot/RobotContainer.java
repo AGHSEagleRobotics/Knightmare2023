@@ -60,7 +60,7 @@ public class RobotContainer {
 
   private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_aimActuator, m_ahrs);
 
-  public final Dashboard m_dashboard = new Dashboard(m_shooterSubsystem, m_ahrs);
+  public final Dashboard m_dashboard = new Dashboard(m_shooterSubsystem, m_aimSubsystem, m_ahrs);
 
   // Driver controllers
   private final CommandXboxController m_driverController =

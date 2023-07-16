@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DashboardConstants;
 
 public class Dashboard extends SubsystemBase {
-  private final ShooterSubsystem m_ShooterSubsystem;
+  private final ShooterSubsystem m_shooterSubsystem;
+  private final AimSubsystem m_aimSubsystem;
   private final AHRS m_ahrs;
 
   private final ShuffleboardTab m_shuffleboardTab;
@@ -39,6 +40,10 @@ public class Dashboard extends SubsystemBase {
   private final GenericEntry m_lowerRPM;
   private final GenericEntry m_upperRpmOk;
   private final GenericEntry m_lowerRpmOk;
+
+  private final GenericEntry m_targetAngle;
+  private final GenericEntry m_shooterAngle;
+  private final GenericEntry m_autoAim;
   
   private final GenericEntry m_rollAngle;
   private final GenericEntry m_pitchAngle;
@@ -46,8 +51,9 @@ public class Dashboard extends SubsystemBase {
   private final GenericEntry m_isMoving;
   
   /** Creates a new Dashboard. */
-  public Dashboard(ShooterSubsystem shooterSubsystem, AHRS ahrs) {
-    m_ShooterSubsystem = shooterSubsystem;
+  public Dashboard(ShooterSubsystem shooterSubsystem, AimSubsystem aimSubsystem, AHRS ahrs) {
+    m_shooterSubsystem = shooterSubsystem;
+    m_aimSubsystem = aimSubsystem;
     m_ahrs = ahrs;
 
     m_shuffleboardTab = Shuffleboard.getTab(SHUFFLEBOARD_TAB_NAME);
@@ -97,25 +103,41 @@ public class Dashboard extends SubsystemBase {
       .withPosition(DashboardConstants.lowerRpmOkX, DashboardConstants.lowerRpmOkY)
       .getEntry();
 
+    m_targetAngle = m_shuffleboardTab.add("TargetAngle", 0)
+      .withSize(DashboardConstants.angleWidth, DashboardConstants.angleHeight)
+      .withPosition(DashboardConstants.targetAngleX, DashboardConstants.targetAngleY)
+      .getEntry();
+
+    m_shooterAngle = m_shuffleboardTab.add("ShooterAngle", 0)
+      .withSize(DashboardConstants.angleWidth, DashboardConstants.angleHeight)
+      .withPosition(DashboardConstants.shooterAngleX, DashboardConstants.shooterAngleY)
+      .getEntry();
+
+    m_autoAim = m_shuffleboardTab.add("AutoAim", 0)
+      .withWidget(BuiltInWidgets.kBooleanBox)
+      .withSize(DashboardConstants.autoAimWidth, DashboardConstants.autoAimHeight)
+      .withPosition(DashboardConstants.autoAimX, DashboardConstants.autoAimY)
+      .getEntry();
+
     m_rollAngle = m_shuffleboardTab.add("Roll", 0)
       .withWidget(BuiltInWidgets.kTextView)
       .withSize(2, 2)
-      .withPosition(12, 7)
+      .withPosition(12, 9)
       .getEntry();
     m_pitchAngle = m_shuffleboardTab.add("Pitch", 0)
       .withWidget(BuiltInWidgets.kTextView)
       .withSize(2, 2)
-      .withPosition(14, 7)
+      .withPosition(14, 9)
       .getEntry();
     m_yawAngle = m_shuffleboardTab.add("Yaw", 0)
       .withWidget(BuiltInWidgets.kTextView)
       .withSize(2, 2)
-      .withPosition(16, 7)
+      .withPosition(16, 9)
       .getEntry();
     m_isMoving = m_shuffleboardTab.add("Moving", false)
       .withWidget(BuiltInWidgets.kBooleanBox)
       .withSize(2, 1)
-      .withPosition(18, 7)
+      .withPosition(18, 9)
       .getEntry();
   } // end constructor
 
@@ -125,15 +147,19 @@ public class Dashboard extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // RPM
-    m_upperTargetRPM.setInteger((int)m_ShooterSubsystem.getUpperTargetRPM());
-    m_lowerTargetRPM.setInteger((int)m_ShooterSubsystem.getLowerTargetRPM());
-    m_upperRPM.setInteger((int)m_ShooterSubsystem.getUpperRPM());
-    m_lowerRPM.setInteger((int)m_ShooterSubsystem.getLowerRPM());
-    m_upperRpmOk.setBoolean(m_ShooterSubsystem.isUpperRpmOk());
-    m_lowerRpmOk.setBoolean(m_ShooterSubsystem.isLowerRpmOk());
+    m_upperTargetRPM.setInteger((int)m_shooterSubsystem.getUpperTargetRPM());
+    m_lowerTargetRPM.setInteger((int)m_shooterSubsystem.getLowerTargetRPM());
+    m_upperRPM.setInteger((int)m_shooterSubsystem.getUpperRPM());
+    m_lowerRPM.setInteger((int)m_shooterSubsystem.getLowerRPM());
+    m_upperRpmOk.setBoolean(m_shooterSubsystem.isUpperRpmOk());
+    m_lowerRpmOk.setBoolean(m_shooterSubsystem.isLowerRpmOk());
 
     // Aim
-    // ToDo: Display target angle, actual angle, and auto-aim enable
+    m_targetAngle.setDouble(Math.round(m_aimSubsystem.getTargetAngle() * 100.0) / 100.0);
+    m_shooterAngle.setDouble(Math.round(m_aimSubsystem.getAngle() * 100.0) / 100.0);
+    m_autoAim.setBoolean(m_aimSubsystem.isAutoEnabled());
+
+    // ToDo: Temporary
     m_rollAngle.setDouble(Math.round(m_ahrs.getRoll() * 100.0) / 100.0);
     m_pitchAngle.setDouble(Math.round(m_ahrs.getPitch() * 100.0) / 100.0);
     m_yawAngle.setDouble(Math.round(m_ahrs.getYaw() * 100.0) / 100.0);

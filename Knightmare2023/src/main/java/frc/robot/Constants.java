@@ -97,6 +97,18 @@ public final class Constants {
     public static final int lowerRpmOkX = lowerTargetX + targetRpmWidth + rpmWidth;
     public static final int lowerRpmOkY = lowerTargetY;
 
+    public static final int angleWidth = 3;
+    public static final int angleHeight = 3;
+    public static final int autoAimWidth = 1;
+    public static final int autoAimHeight = angleHeight;
+
+    public static final int targetAngleX = upperTargetX;
+    public static final int targetAngleY = lowerTargetY + targetRpmHeight + 1;
+    public static final int shooterAngleX = targetAngleX + angleWidth;
+    public static final int shooterAngleY = targetAngleY;
+    public static final int autoAimX = shooterAngleX + angleWidth;
+    public static final int autoAimY = targetAngleY;
+
     public static final int pitchAngleX = upperTargetX;
     public static final int pitchAngleY = 8;
     public static final int pitchAngleWidth = 3;

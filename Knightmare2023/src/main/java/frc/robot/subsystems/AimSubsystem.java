@@ -19,7 +19,6 @@ public class AimSubsystem extends SubsystemBase {
 
   private double m_angleSetpoint;   // target angle (inclination) for the shooter
   private boolean m_autoEnabled;    // defines whether auto-aim is enabled
-  private boolean m_manualActive;   // defines whether manual aim is active
 
   /** Creates a new AimSubsystem. */
   public AimSubsystem(Relay actuator, AHRS ahrs) {
@@ -37,9 +36,13 @@ public class AimSubsystem extends SubsystemBase {
     m_autoEnabled = enable;
 
     if (enable == false) {
-      // also disable manual aim, if it's active
-      m_manualActive = false;
+      setAimMotor(ShooterConstants.AIM_STOP);
     }
+  }
+
+  /** Get Auto Aim mode */
+  public boolean isAutoEnabled() {
+    return m_autoEnabled;
   }
 
   /** Set the target Aim Angle */
@@ -57,19 +60,15 @@ public class AimSubsystem extends SubsystemBase {
     Preferences.setDouble(ShooterConstants.PREF_KEY_ANGLE, m_angleSetpoint);
     DataLogManager.log(String.format("Target angle saved: %.2f", m_angleSetpoint));
   }
-  
+
   /** Increase the shooter setpoint */
   public void increaseTargetAngle() {
     setTargetAngle(getTargetAngle() + ShooterConstants.SETPOINT_INCREMENT);
-    m_manualActive = true;
-    m_autoEnabled = false;
   }
   
   /** Decrease the shooter setpoint */
   public void decreaseTargetAngle() {
     setTargetAngle(getTargetAngle() - ShooterConstants.SETPOINT_INCREMENT);
-    m_manualActive = true;
-    m_autoEnabled = false;
   }
 
   /** The current shooter pitch angle */
@@ -77,36 +76,35 @@ public class AimSubsystem extends SubsystemBase {
     return m_ahrs.getPitch();   // ToDo: verify that this is the correct axis/orientation
   }
 
+  /** Set the aim linear actuator */
+  public void setAimMotor(Relay.Value value) {
+    m_actuator.set(value);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    if (m_autoEnabled || m_manualActive) {
+    if (m_autoEnabled) {
       double pitchError = getAngle() - getTargetAngle();
 
       if (pitchError > ShooterConstants.AIM_ANGLE_TOLERANCE) {
         // lower the shooter
-        m_actuator.set(ShooterConstants.AIM_DOWN);
+        setAimMotor(ShooterConstants.AIM_DOWN);
       }
       else if (pitchError < -(ShooterConstants.AIM_ANGLE_TOLERANCE)) {
         // raise the shooter
-        m_actuator.set(ShooterConstants.AIM_UP);
+        setAimMotor(ShooterConstants.AIM_UP);
       }
       else {
         // hold position
-        m_actuator.set(ShooterConstants.AIM_STOP);
-        // we're at the setpoint - disable manual mode
-        m_manualActive = false;
+        setAimMotor(ShooterConstants.AIM_STOP);
       }
-    } else {
-      // hold position
-      m_actuator.set(ShooterConstants.AIM_STOP);
     }
 
     if (DriverStation.isDisabled()) {
       // disable aim
       m_autoEnabled = false;
-      m_manualActive = false;
     }
   }
 }

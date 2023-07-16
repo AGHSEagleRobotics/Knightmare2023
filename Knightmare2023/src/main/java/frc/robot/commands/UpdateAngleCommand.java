@@ -37,13 +37,22 @@ public class UpdateAngleCommand extends CommandBase {
   public void execute() {
     runCount++;
 
-    // Increment/decrement the target angle once when the command starts,
-    // then continuously after the specified delay
-    if ((runCount == 1) || (runCount > ShooterConstants.INCREMENT_DELAY)) {
+    if (m_AimSubsystem.isAutoEnabled()) {
+      // Increment/decrement once when the command starts,
+      // then continuously after the specified delay
+      if ((runCount == 1) || (runCount > ShooterConstants.INCREMENT_DELAY)) {
+        if (m_direction == Direction.increase) {
+          m_AimSubsystem.increaseTargetAngle();
+        } else {
+          m_AimSubsystem.decreaseTargetAngle();
+        }
+      }
+    } else {
+      // manual mode
       if (m_direction == Direction.increase) {
-        m_AimSubsystem.increaseTargetAngle();
+        m_AimSubsystem.setAimMotor(ShooterConstants.AIM_UP);
       } else {
-        m_AimSubsystem.decreaseTargetAngle();
+        m_AimSubsystem.setAimMotor(ShooterConstants.AIM_DOWN);
       }
     }
   }
@@ -51,8 +60,13 @@ public class UpdateAngleCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // store the target angle in persistent memory
-    m_AimSubsystem.saveTargetAngle();
+    if (m_AimSubsystem.isAutoEnabled()) {
+      // store the target angle in persistent memory
+      m_AimSubsystem.saveTargetAngle();
+    } else {
+      // manual mode
+      m_AimSubsystem.setAimMotor(ShooterConstants.AIM_STOP);
+    }
   }
 
   // Returns true when the command should end.
