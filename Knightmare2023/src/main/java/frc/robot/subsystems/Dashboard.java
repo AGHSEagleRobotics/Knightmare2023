@@ -133,6 +133,7 @@ public class Dashboard extends SubsystemBase {
     m_lowerRpmOk.setBoolean(m_ShooterSubsystem.isLowerRpmOk());
 
     // Aim
+    // ToDo: Display target angle, actual angle, and auto-aim enable
     m_rollAngle.setDouble(Math.round(m_ahrs.getRoll() * 100.0) / 100.0);
     m_pitchAngle.setDouble(Math.round(m_ahrs.getPitch() * 100.0) / 100.0);
     m_yawAngle.setDouble(Math.round(m_ahrs.getYaw() * 100.0) / 100.0);

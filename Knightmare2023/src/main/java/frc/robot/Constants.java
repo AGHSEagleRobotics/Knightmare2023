@@ -64,7 +64,7 @@ public final class Constants {
     public static final double DEFAULT_ANGLE = 10.0;
     public static final double AIM_ANGLE_TOLERANCE = 0.5;   // degrees; the shooter is considered on-target within this tolerance
 
-    public static final double SETPOINT_INCREMENT = 0.5;    // degrees - amount to change the setpoint for manual adjustment
+    public static final double SETPOINT_INCREMENT = 0.02;   // degrees - amount to change the setpoint for manual adjustment
 
     public static final Relay.Value AIM_UP = Relay.Value.kReverse;
     public static final Relay.Value AIM_DOWN = Relay.Value.kForward;

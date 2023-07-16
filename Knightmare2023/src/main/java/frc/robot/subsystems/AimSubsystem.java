@@ -59,12 +59,14 @@ public class AimSubsystem extends SubsystemBase {
   public void increaseAngle() {
     setTargetAngle(getTargetAngle() + ShooterConstants.SETPOINT_INCREMENT);
     m_manualActive = true;
+    m_autoEnabled = false;
   }
   
   /** Decrease the shooter setpoint */
   public void decreaseAngle() {
     setTargetAngle(getTargetAngle() - ShooterConstants.SETPOINT_INCREMENT);
     m_manualActive = true;
+    m_autoEnabled = false;
   }
 
   /** The current shooter pitch angle */

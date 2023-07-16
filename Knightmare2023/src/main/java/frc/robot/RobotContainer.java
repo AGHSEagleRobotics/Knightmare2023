@@ -24,6 +24,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -91,8 +92,8 @@ public class RobotContainer {
     m_driverController.rightTrigger(ShooterConstants.SHOOTER_TRIGGER_THRESHOLD).onTrue(new ShootCommand(m_shooterSubsystem));
 
     /** Aim */
-    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_aimSubsystem.increaseAngle()));
-    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_aimSubsystem.decreaseAngle()));
+    m_driverController.rightBumper().onTrue(new RepeatCommand(new InstantCommand(() -> m_aimSubsystem.increaseAngle())));
+    m_driverController.leftBumper().onTrue(new RepeatCommand(new InstantCommand(() -> m_aimSubsystem.decreaseAngle())));
 
     /** Set shooter speed */
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.both)));
