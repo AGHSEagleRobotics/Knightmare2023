@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.deser.ValueInstantiator.Gettable;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -24,7 +27,8 @@ public class AimSubsystem extends SubsystemBase {
     m_actuator = actuator;
     m_ahrs = ahrs;
 
-    m_angleSetpoint = ShooterConstants.DEFAULT_ANGLE;
+    double targetAngle = Preferences.getDouble(ShooterConstants.PREF_KEY_ANGLE, ShooterConstants.DEFAULT_ANGLE);
+    setTargetAngle(targetAngle);
   }
 
   /** Enable or disable Auto Aim.
@@ -39,15 +43,27 @@ public class AimSubsystem extends SubsystemBase {
     }
   }
 
-  /** Increase the shooter setpoint */
-  public void increaseAngle() {
-    m_angleSetpoint += ShooterConstants.SETPOINT_INCREMENT;
-    m_manualActive = true;
+  /** Set the target Aim Angle */
+  private void setTargetAngle(double target) {
+    m_angleSetpoint = target;
+    Preferences.setDouble(ShooterConstants.PREF_KEY_ANGLE, target);
+    DataLogManager.log(String.format("Target angle set to %.2f", target));
   }
 
+  /** Get the target Aim Angle */
+  public double getTargetAngle() {
+    return m_angleSetpoint;
+  }
+
+  /** Increase the shooter setpoint */
+  public void increaseAngle() {
+    setTargetAngle(getTargetAngle() + ShooterConstants.SETPOINT_INCREMENT);
+    m_manualActive = true;
+  }
+  
   /** Decrease the shooter setpoint */
   public void decreaseAngle() {
-    m_angleSetpoint -= ShooterConstants.SETPOINT_INCREMENT;
+    setTargetAngle(getTargetAngle() - ShooterConstants.SETPOINT_INCREMENT);
     m_manualActive = true;
   }
 
@@ -61,7 +77,7 @@ public class AimSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     if (m_autoEnabled || m_manualActive) {
-      double pitchError = getAngle() - m_angleSetpoint;
+      double pitchError = getAngle() - getTargetAngle();
 
       if (pitchError > ShooterConstants.AIM_ANGLE_TOLERANCE) {
         // lower the shooter

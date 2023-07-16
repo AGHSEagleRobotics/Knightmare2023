@@ -60,6 +60,7 @@ public final class Constants {
     // Aim Subsystem
     public static final int RELAY_aimActuator = 0;
 
+    public static final String PREF_KEY_ANGLE = "Knightmare2023/AimAngle";
     public static final double DEFAULT_ANGLE = 10.0;
     public static final double AIM_ANGLE_TOLERANCE = 0.5;   // degrees; the shooter is considered on-target within this tolerance
 
