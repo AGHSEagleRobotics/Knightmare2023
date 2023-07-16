@@ -20,53 +20,53 @@ import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private final WPI_TalonFX m_upperMotor;
-  private final WPI_TalonFX m_lowerMotor;
+  private final WPI_TalonFX m_leftMotor;
+  private final WPI_TalonFX m_rightMotor;
   private final CANSparkMax m_feederMotor;
 
   private Timer m_shooterCooldownTimer;   //< Allow the shooter to run for a bit after disabling
 
   private boolean m_shooterEnabled = false;
-  private double m_upperTargetRPM = ShooterConstants.UPPER_RPM_DEFAULT;
-  private double m_lowerTargetRPM = ShooterConstants.LOWER_RPM_DEFAULT;
+  private double m_leftTargetRPM = ShooterConstants.LEFT_RPM_DEFAULT;
+  private double m_rightTargetRPM = ShooterConstants.RIGHT_RPM_DEFAULT;
 
   // Math variables needed to convert RPM to ticks per second/ticks per
   private final int SENSOR_CYCLES_PER_SECOND = 10;   // sensor velocity period is 100 ms
   private final int SEC_PER_MIN = 60;
   private final int COUNTS_PER_REV = 2048;
 
-  public enum Position { upper, lower, both }
+  public enum Position { left, right, both }
   public enum FeederDirection { forward, reverse, stop }
 
   /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem(WPI_TalonFX upperMotor, WPI_TalonFX lowerMotor, CANSparkMax feederMotor)  {
-    m_upperMotor = upperMotor;
-    m_lowerMotor = lowerMotor;
+  public ShooterSubsystem(WPI_TalonFX leftMotor, WPI_TalonFX rightMotor, CANSparkMax feederMotor)  {
+    m_leftMotor = leftMotor;
+    m_rightMotor = rightMotor;
     m_feederMotor = feederMotor;
 
-    // Configure upper motor
-    m_upperMotor.configFactoryDefault();
-    m_upperMotor.setNeutralMode(NeutralMode.Coast);
-    m_upperMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    m_upperMotor.setSensorPhase(false);
-    m_upperMotor.setInverted(false);
+    // Configure left motor
+    m_leftMotor.configFactoryDefault();
+    m_leftMotor.setNeutralMode(NeutralMode.Coast);
+    m_leftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    m_leftMotor.setSensorPhase(false);
+    m_leftMotor.setInverted(false);
 
-    m_upperMotor.config_kF(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_F);
-    m_upperMotor.config_kP(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_P);
-    m_upperMotor.config_kI(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_I);
-    m_upperMotor.config_kD(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_D);
+    m_leftMotor.config_kF(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_F);
+    m_leftMotor.config_kP(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_P);
+    m_leftMotor.config_kI(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_I);
+    m_leftMotor.config_kD(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_D);
 
-    // Configure lower motor
-    m_lowerMotor.configFactoryDefault();
-    m_lowerMotor.setNeutralMode(NeutralMode.Coast);
-    m_lowerMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    m_lowerMotor.setSensorPhase(true);
-    m_lowerMotor.setInverted(true);
+    // Configure right motor
+    m_rightMotor.configFactoryDefault();
+    m_rightMotor.setNeutralMode(NeutralMode.Coast);
+    m_rightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    m_rightMotor.setSensorPhase(true);
+    m_rightMotor.setInverted(true);
 
-    m_lowerMotor.config_kF(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_F);
-    m_lowerMotor.config_kP(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_P);
-    m_lowerMotor.config_kI(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_I);
-    m_lowerMotor.config_kD(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_D);
+    m_rightMotor.config_kF(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_F);
+    m_rightMotor.config_kP(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_P);
+    m_rightMotor.config_kI(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_I);
+    m_rightMotor.config_kD(ShooterConstants.PID_IDX, ShooterConstants.GAINS_VELOCITY_D);
 
     // Configure feeder motor
     m_feederMotor.setIdleMode(IdleMode.kBrake);
@@ -88,69 +88,69 @@ public class ShooterSubsystem extends SubsystemBase {
     return m_shooterEnabled;
   }
   
-  public void setUpperTargetRPM (double rpm) {
-    m_upperTargetRPM = rpm;
+  public void setLeftTargetRPM (double rpm) {
+    m_leftTargetRPM = rpm;
   }
-  public void setLowerTargetRPM (double rpm) {
-    m_lowerTargetRPM = rpm;
-  }
-
-  public double getUpperTargetRPM () {
-    return m_upperTargetRPM;
-  }
-  public double getLowerTargetRPM () {
-    return m_lowerTargetRPM;
+  public void setRightTargetRPM (double rpm) {
+    m_rightTargetRPM = rpm;
   }
 
-  public double getUpperRPM () {
-    double rawSensorData = m_upperMotor.getSelectedSensorVelocity();
+  public double getLeftTargetRPM () {
+    return m_leftTargetRPM;
+  }
+  public double getRightTargetRPM () {
+    return m_rightTargetRPM;
+  }
+
+  public double getLeftRPM () {
+    double rawSensorData = m_leftMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
-// if (m_shooterEnabled) return m_upperTargetRPM;  // DEBUG
+// if (m_shooterEnabled) return m_leftTargetRPM;  // DEBUG
 // else return 0;  // DEBUG
     return motorRPM;
   }
-  public double getLowerRPM () {
-    double rawSensorData = m_lowerMotor.getSelectedSensorVelocity();
+  public double getRightRPM () {
+    double rawSensorData = m_rightMotor.getSelectedSensorVelocity();
     double motorRPM = rawSensorData * SENSOR_CYCLES_PER_SECOND * SEC_PER_MIN / COUNTS_PER_REV;
-// if (m_shooterEnabled) return m_lowerTargetRPM;  // DEBUG
+// if (m_shooterEnabled) return m_rightTargetRPM;  // DEBUG
 // else return 0;  // DEBUG
     return motorRPM;
   }
 
-  public boolean isUpperRpmOk() {
-    double error = getUpperRPM() - m_upperTargetRPM;
+  public boolean isLeftRpmOk() {
+    double error = getLeftRPM() - m_leftTargetRPM;
     return (Math.abs(error) <= ShooterConstants.SHOOTER_RPM_TOLERANCE);
   }
-  public boolean isLowerRpmOk() {
-    double error = getLowerRPM() - m_lowerTargetRPM;
+  public boolean isRightRpmOk() {
+    double error = getRightRPM() - m_rightTargetRPM;
     return (Math.abs(error) <= ShooterConstants.SHOOTER_RPM_TOLERANCE);
   }
 
   /** Increase shooter speed(s) by one step
-   *  @param  position  Increase speed of upper, lower or both wheels
+   *  @param  position  Increase speed of left, right or both wheels
    */
   public void shooterRpmStepIncrease(Position position) {
-    if ((position == Position.upper) || (position == Position.both)) {
-      m_upperTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
-      m_upperTargetRPM = MathUtil.clamp(m_upperTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    if ((position == Position.left) || (position == Position.both)) {
+      m_leftTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_leftTargetRPM = MathUtil.clamp(m_leftTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
     }
-    if ((position == Position.lower) || (position == Position.both)) {
-      m_lowerTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
-      m_lowerTargetRPM = MathUtil.clamp(m_lowerTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    if ((position == Position.right) || (position == Position.both)) {
+      m_rightTargetRPM += ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_rightTargetRPM = MathUtil.clamp(m_rightTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
     }
   }
 
   /** Decrease shooter speed(s) by one step
-   *  @param  position  Decrease speed of upper, lower or both wheels
+   *  @param  position  Decrease speed of left, right or both wheels
    */
   public void shooterRpmStepDecrease(Position position) {
-    if ((position == Position.upper) || (position == Position.both)) {
-      m_upperTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
-      m_upperTargetRPM = MathUtil.clamp(m_upperTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    if ((position == Position.left) || (position == Position.both)) {
+      m_leftTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_leftTargetRPM = MathUtil.clamp(m_leftTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
     }
-    if ((position == Position.lower) || (position == Position.both)) {
-      m_lowerTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
-      m_lowerTargetRPM = MathUtil.clamp(m_lowerTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
+    if ((position == Position.right) || (position == Position.both)) {
+      m_rightTargetRPM -= ShooterConstants.SHOOTER_RPM_STEP_CHANGE;
+      m_rightTargetRPM = MathUtil.clamp(m_rightTargetRPM, ShooterConstants.MIN_SHOOTER_RPM, ShooterConstants.MAX_SHOOTER_RPM);
     }
   }
 
@@ -190,13 +190,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     if (m_shooterEnabled) {
-      double upperSpeed = m_upperTargetRPM * COUNTS_PER_REV / SENSOR_CYCLES_PER_SECOND / SEC_PER_MIN;
-      m_upperMotor.set(ControlMode.Velocity, upperSpeed);      
-      double lowerSpeed = m_lowerTargetRPM * COUNTS_PER_REV / SENSOR_CYCLES_PER_SECOND / SEC_PER_MIN;
-      m_lowerMotor.set(ControlMode.Velocity, lowerSpeed);      
+      double leftSpeed = m_leftTargetRPM * COUNTS_PER_REV / SENSOR_CYCLES_PER_SECOND / SEC_PER_MIN;
+      m_leftMotor.set(ControlMode.Velocity, leftSpeed);      
+      double rightSpeed = m_rightTargetRPM * COUNTS_PER_REV / SENSOR_CYCLES_PER_SECOND / SEC_PER_MIN;
+      m_rightMotor.set(ControlMode.Velocity, rightSpeed);      
     } else {
-      m_upperMotor.set(0);
-      m_lowerMotor.set(0);
+      m_leftMotor.set(0);
+      m_rightMotor.set(0);
     }
 
   }

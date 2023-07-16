@@ -54,8 +54,8 @@ public class RobotContainer {
   );
 
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(
-    new WPI_TalonFX(ShooterConstants.CANID_upperMotor),
-    new WPI_TalonFX(ShooterConstants.CANID_lowerMotor),
+    new WPI_TalonFX(ShooterConstants.CANID_leftMotor),
+    new WPI_TalonFX(ShooterConstants.CANID_rightMotor),
     new CANSparkMax(ShooterConstants.CANID_feederMotor, MotorType.kBrushless));
 
   private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_aimActuator, m_ahrs);
@@ -98,8 +98,8 @@ public class RobotContainer {
     /** Set shooter speed */
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.both)));
     m_driverController.povDown().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepDecrease(Position.both)));
-    m_driverController.povRight().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.upper)));
-    m_driverController.povLeft().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepDecrease(Position.upper)));
+    m_driverController.povRight().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepIncrease(Position.left)));
+    m_driverController.povLeft().onTrue(new InstantCommand(() -> m_shooterSubsystem.shooterRpmStepDecrease(Position.left)));
   }
 
   /**

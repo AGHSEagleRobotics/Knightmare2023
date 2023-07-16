@@ -27,8 +27,8 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int CANID_upperMotor = 5;
-    public static final int CANID_lowerMotor = 6;
+    public static final int CANID_leftMotor = 5;
+    public static final int CANID_rightMotor = 6;
     public static final int CANID_feederMotor = 7;
 
     public static final int PID_IDX = 0;
@@ -39,8 +39,8 @@ public final class Constants {
 
     public static final double SHOOTER_COOLDOWN_TIME = 2.0;   // time in seconds to wait before shooter is turned off
 
-    public static final double UPPER_RPM_DEFAULT = 1000;
-    public static final double LOWER_RPM_DEFAULT = 1000;
+    public static final double LEFT_RPM_DEFAULT = 1000;
+    public static final double RIGHT_RPM_DEFAULT = 1000;
 
     public static final double SHOOTER_TRIGGER_THRESHOLD = 0.5;
 
@@ -82,34 +82,34 @@ public final class Constants {
     public static final int rpmOkWidth = 2;
     public static final int rpmOkHeight = targetRpmHeight;
 
-    public static final int upperTargetX = 12;
-    public static final int upperTargetY = 0;
-    public static final int lowerTargetX = upperTargetX;
-    public static final int lowerTargetY = upperTargetY + targetRpmHeight;
+    public static final int leftTargetX = 12;
+    public static final int leftTargetY = 0;
+    public static final int rightTargetX = leftTargetX;
+    public static final int rightTargetY = leftTargetY + targetRpmHeight;
 
-    public static final int upperRpmX = upperTargetX + targetRpmWidth;
-    public static final int upperRpmY = upperTargetY;
-    public static final int lowerRpmX = lowerTargetX + targetRpmWidth;
-    public static final int lowerRpmY = lowerTargetY;
+    public static final int leftRpmX = leftTargetX + targetRpmWidth;
+    public static final int leftRpmY = leftTargetY;
+    public static final int rightRpmX = rightTargetX + targetRpmWidth;
+    public static final int rightRpmY = rightTargetY;
 
-    public static final int upperRpmOkX = upperTargetX + targetRpmWidth + rpmWidth;
-    public static final int upperRpmOkY = upperTargetY;
-    public static final int lowerRpmOkX = lowerTargetX + targetRpmWidth + rpmWidth;
-    public static final int lowerRpmOkY = lowerTargetY;
+    public static final int leftRpmOkX = leftTargetX + targetRpmWidth + rpmWidth;
+    public static final int leftRpmOkY = leftTargetY;
+    public static final int rightRpmOkX = rightTargetX + targetRpmWidth + rpmWidth;
+    public static final int rightRpmOkY = rightTargetY;
 
     public static final int angleWidth = 3;
     public static final int angleHeight = 2;
     public static final int autoAimWidth = 2;
     public static final int autoAimHeight = angleHeight;
 
-    public static final int targetAngleX = upperTargetX;
-    public static final int targetAngleY = lowerTargetY + targetRpmHeight;
+    public static final int targetAngleX = leftTargetX;
+    public static final int targetAngleY = rightTargetY + targetRpmHeight;
     public static final int shooterAngleX = targetAngleX + angleWidth;
     public static final int shooterAngleY = targetAngleY;
     public static final int autoAimX = shooterAngleX + angleWidth;
     public static final int autoAimY = targetAngleY;
 
-    public static final int pitchAngleX = upperTargetX;
+    public static final int pitchAngleX = leftTargetX;
     public static final int pitchAngleY = 8;
     public static final int pitchAngleWidth = 3;
     public static final int pitchAngleHeight = 2;

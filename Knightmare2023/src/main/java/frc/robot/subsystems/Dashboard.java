@@ -34,12 +34,12 @@ public class Dashboard extends SubsystemBase {
 
   private final ComplexWidget m_CameraComplexWidget;
 
-  private final GenericEntry m_upperTargetRPM;
-  private final GenericEntry m_lowerTargetRPM;
-  private final GenericEntry m_upperRPM;
-  private final GenericEntry m_lowerRPM;
-  private final GenericEntry m_upperRpmOk;
-  private final GenericEntry m_lowerRpmOk;
+  private final GenericEntry m_leftTargetRPM;
+  private final GenericEntry m_rightTargetRPM;
+  private final GenericEntry m_leftRPM;
+  private final GenericEntry m_rightRPM;
+  private final GenericEntry m_leftRpmOk;
+  private final GenericEntry m_rightRpmOk;
 
   private final GenericEntry m_targetAngle;
   private final GenericEntry m_shooterAngle;
@@ -69,38 +69,38 @@ public class Dashboard extends SubsystemBase {
       .withSize(12, 12)
       .withPosition(0, 0);
       
-    m_upperTargetRPM = m_shuffleboardTab.add("UpperTarget", 0)
+    m_leftTargetRPM = m_shuffleboardTab.add("LeftSetpoint", 0)
       .withSize(DashboardConstants.targetRpmWidth, DashboardConstants.targetRpmHeight)
-      .withPosition(DashboardConstants.upperTargetX, DashboardConstants.upperTargetY)
+      .withPosition(DashboardConstants.leftTargetX, DashboardConstants.leftTargetY)
       .getEntry();
-    m_upperRPM = m_shuffleboardTab.add("UpperRPM", 0)
+    m_leftRPM = m_shuffleboardTab.add("LeftRPM", 0)
       .withWidget(BuiltInWidgets.kNumberBar)
       .withProperties(Map.of("Min", 0.0,
                              "Max", 6000.0))
       .withSize(DashboardConstants.rpmWidth, DashboardConstants.rpmHeight)
-      .withPosition(DashboardConstants.upperRpmX, DashboardConstants.upperRpmY)
+      .withPosition(DashboardConstants.leftRpmX, DashboardConstants.leftRpmY)
       .getEntry();
-    m_upperRpmOk = m_shuffleboardTab.add("UpperOk", false)
+    m_leftRpmOk = m_shuffleboardTab.add("LeftOk", false)
       .withWidget(BuiltInWidgets.kBooleanBox)
       .withSize(DashboardConstants.rpmOkWidth, DashboardConstants.rpmOkHeight)
-      .withPosition(DashboardConstants.upperRpmOkX, DashboardConstants.upperRpmOkY)
+      .withPosition(DashboardConstants.leftRpmOkX, DashboardConstants.leftRpmOkY)
       .getEntry();
       
-    m_lowerTargetRPM = m_shuffleboardTab.add("LowerTarget", 0)
+    m_rightTargetRPM = m_shuffleboardTab.add("RightSetpoint", 0)
       .withSize(DashboardConstants.targetRpmWidth, DashboardConstants.targetRpmHeight)
-      .withPosition(DashboardConstants.lowerTargetX, DashboardConstants.lowerTargetY)
+      .withPosition(DashboardConstants.rightTargetX, DashboardConstants.rightTargetY)
       .getEntry();
-    m_lowerRPM = m_shuffleboardTab.add("LowerRPM", 0)
+    m_rightRPM = m_shuffleboardTab.add("RightRPM", 0)
       .withWidget(BuiltInWidgets.kNumberBar)
       .withProperties(Map.of("Min", 0.0,
                              "Max", 6000.0))
       .withSize(DashboardConstants.rpmWidth, DashboardConstants.rpmHeight)
-      .withPosition(DashboardConstants.lowerRpmX, DashboardConstants.lowerRpmY)
+      .withPosition(DashboardConstants.rightRpmX, DashboardConstants.rightRpmY)
       .getEntry();
-    m_lowerRpmOk = m_shuffleboardTab.add("LowerOk", false)
+    m_rightRpmOk = m_shuffleboardTab.add("RightOk", false)
       .withWidget(BuiltInWidgets.kBooleanBox)
       .withSize(DashboardConstants.rpmOkWidth, DashboardConstants.rpmOkHeight)
-      .withPosition(DashboardConstants.lowerRpmOkX, DashboardConstants.lowerRpmOkY)
+      .withPosition(DashboardConstants.rightRpmOkX, DashboardConstants.rightRpmOkY)
       .getEntry();
 
     m_targetAngle = m_shuffleboardTab.add("TargetAngle", 0)
@@ -147,12 +147,12 @@ public class Dashboard extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // RPM
-    m_upperTargetRPM.setInteger((int)m_shooterSubsystem.getUpperTargetRPM());
-    m_lowerTargetRPM.setInteger((int)m_shooterSubsystem.getLowerTargetRPM());
-    m_upperRPM.setInteger((int)m_shooterSubsystem.getUpperRPM());
-    m_lowerRPM.setInteger((int)m_shooterSubsystem.getLowerRPM());
-    m_upperRpmOk.setBoolean(m_shooterSubsystem.isUpperRpmOk());
-    m_lowerRpmOk.setBoolean(m_shooterSubsystem.isLowerRpmOk());
+    m_leftTargetRPM.setInteger((int)m_shooterSubsystem.getLeftTargetRPM());
+    m_rightTargetRPM.setInteger((int)m_shooterSubsystem.getRightTargetRPM());
+    m_leftRPM.setInteger((int)m_shooterSubsystem.getLeftRPM());
+    m_rightRPM.setInteger((int)m_shooterSubsystem.getRightRPM());
+    m_leftRpmOk.setBoolean(m_shooterSubsystem.isLeftRpmOk());
+    m_rightRpmOk.setBoolean(m_shooterSubsystem.isRightRpmOk());
 
     // Aim
     m_targetAngle.setDouble(Math.round(m_aimSubsystem.getTargetAngle() * 100.0) / 100.0);
