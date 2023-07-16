@@ -113,7 +113,7 @@ public class Dashboard extends SubsystemBase {
       .withPosition(DashboardConstants.shooterAngleX, DashboardConstants.shooterAngleY)
       .getEntry();
 
-    m_autoAim = m_shuffleboardTab.add("AutoAim", 0)
+    m_autoAim = m_shuffleboardTab.add("AutoAim", false)
       .withWidget(BuiltInWidgets.kBooleanBox)
       .withSize(DashboardConstants.autoAimWidth, DashboardConstants.autoAimHeight)
       .withPosition(DashboardConstants.autoAimX, DashboardConstants.autoAimY)

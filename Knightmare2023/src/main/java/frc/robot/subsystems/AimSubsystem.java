@@ -73,7 +73,7 @@ public class AimSubsystem extends SubsystemBase {
 
   /** The current shooter pitch angle */
   public double getAngle() {
-    return m_ahrs.getPitch();   // ToDo: verify that this is the correct axis/orientation
+    return (-1.0 * m_ahrs.getPitch());
   }
 
   /** Set the aim linear actuator */
@@ -101,10 +101,11 @@ public class AimSubsystem extends SubsystemBase {
         setAimMotor(ShooterConstants.AIM_STOP);
       }
     }
-
+    
     if (DriverStation.isDisabled()) {
       // disable aim
       m_autoEnabled = false;
+      setAimMotor(ShooterConstants.AIM_STOP);
     }
   }
 }
