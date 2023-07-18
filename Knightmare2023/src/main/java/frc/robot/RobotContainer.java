@@ -56,7 +56,8 @@ public class RobotContainer {
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(
     new WPI_TalonFX(ShooterConstants.CANID_leftMotor),
     new WPI_TalonFX(ShooterConstants.CANID_rightMotor),
-    new CANSparkMax(ShooterConstants.CANID_feederMotor, MotorType.kBrushless));
+    new CANSparkMax(ShooterConstants.CANID_feederMotor, MotorType.kBrushless),
+    new Relay(ShooterConstants.RELAY_signalLight));
 
   private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_aimActuator, m_ahrs);
 
@@ -82,7 +83,7 @@ public class RobotContainer {
   private void configureBindings() {
     /** Enable/disable shooter */
     m_driverController.a().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(true)));
-    m_driverController.b().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(false)));
+    m_driverController.b().onTrue(new InstantCommand(() -> m_shooterSubsystem.stopShooter()));
     
     /** Enable/disable Auto Aim */
     m_driverController.x().onTrue(new InstantCommand(() -> m_aimSubsystem.setAutoEnabled(true)));

@@ -30,6 +30,7 @@ public final class Constants {
     public static final int CANID_leftMotor = 5;
     public static final int CANID_rightMotor = 6;
     public static final int CANID_feederMotor = 7;
+    public static final int RELAY_signalLight = 1;
 
     public static final int PID_IDX = 0;
     public static final double GAINS_VELOCITY_F = 0.047;
@@ -51,7 +52,10 @@ public final class Constants {
     public static final double SHOOTER_RPM_TOLERANCE = 100;
 
     public static final double FEEDER_FWD_SPEED = 0.5;
-    public static final double FEEDER_REV_SPEED = -0.5;
+    public static final double FEEDER_REV_SPEED = -0.25;
+
+    public static final Relay.Value SIGNAL_ON = Relay.Value.kForward;
+    public static final Relay.Value SIGNAL_OFF = Relay.Value.kOff;
 
     // Shoot command
     public static final double SHOOT_FWD_TIME = 0.25;
