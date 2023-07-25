@@ -73,7 +73,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Configure feeder motor
     m_feederMotor.setIdleMode(IdleMode.kBrake);
-    m_feederMotor.setInverted(false);
+    m_feederMotor.setInverted(true);
 
     m_shooterCooldownTimer = new Timer();
   }
