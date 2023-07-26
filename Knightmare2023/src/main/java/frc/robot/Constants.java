@@ -51,24 +51,24 @@ public final class Constants {
 
     public static final double SHOOTER_RPM_TOLERANCE = 100;
 
+    // Shoot command
+    public static final double SHOOT_FWD_TIME = 0.25;
+    public static final double SHOOT_REV_TIME = 0.25;
+    
     public static final double FEEDER_FWD_SPEED = 0.5;
     public static final double FEEDER_REV_SPEED = -0.25;
 
     public static final Relay.Value SIGNAL_ON = Relay.Value.kForward;
     public static final Relay.Value SIGNAL_OFF = Relay.Value.kOff;
 
-    // Shoot command
-    public static final double SHOOT_FWD_TIME = 0.25;
-    public static final double SHOOT_REV_TIME = 0.25;
-    
     // Aim Subsystem
     public static final int RELAY_aimActuator = 0;
 
     public static final String PREF_KEY_ANGLE = "Knightmare2023/AimAngle";
     public static final double DEFAULT_ANGLE = 10.0;
-    public static final double AIM_ANGLE_TOLERANCE = 0.5;   // degrees; the shooter is considered on-target within this tolerance
+    public static final double AIM_ANGLE_TOLERANCE = 0.15;  // degrees; the shooter is considered on-target within this tolerance
 
-    public static final double SETPOINT_INCREMENT = 0.02;   // degrees - amount to change the setpoint for manual adjustment
+    public static final double SETPOINT_INCREMENT = 0.10;   // degrees - amount to change the setpoint for manual adjustment
     public static final int INCREMENT_DELAY = 25;           // loop count; increment/decrement once, then wait this long to increment continuously
 
     public static final Relay.Value AIM_UP = Relay.Value.kReverse;
