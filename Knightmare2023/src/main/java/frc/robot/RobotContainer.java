@@ -84,9 +84,15 @@ public class RobotContainer {
   /**
    * Use this method to define your trigger->command mappings.
    */
+  void enableShooter() {
+    m_shooterSubsystem.setShooterEnabled(true);
+    // The pitch angle is very sensitive to shooter vibration, so disable auto-aim when enabling the shooter
+    m_aimSubsystem.setAutoEnabled(false);
+  }
+
   private void configureBindings() {
     /** Enable/disable shooter */
-    m_driverController.a().onTrue(new InstantCommand(() -> m_shooterSubsystem.setShooterEnabled(true)));
+    m_driverController.a().onTrue(new InstantCommand(() -> enableShooter()));
     m_driverController.b().onTrue(new InstantCommand(() -> m_shooterSubsystem.stopShooter()));
     
     /** Enable/disable Auto Aim */
